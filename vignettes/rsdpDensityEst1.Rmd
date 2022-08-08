@@ -1,0 +1,93 @@
+---
+title: "SDP Density Estimation"
+author: Satoshi Kakihara & Takashi Tsuchiya
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SDP Density Estimation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette provides a tutorial and a brief overview of the theory behind the package. We first give a quick overview of the package, and then tutorials. We 
+discuss some theoretical backgrounds in the closing section.
+
+# Overview
+
+## A Quick Overview
+
+The main purpose of this package is to estimate density functions using 
+familiar Gaussian or an exponential distribution plus polynomial correction 
+terms.
+
+To serve this, two functions `gridSearchGaussEst(...)` and 
+`gridSearchExpEst(...)` are provided, and we will go through them in sequel.
+
+This package also provides graphic routines to facilitate a visualization of
+estimators. Yet, users can plot estimated densities using auxiliary routines 
+for specific demands.
+
+Before go to a tutorial, please import the package.
+```
+library(rsdpDensityEst1)
+```
+
+## A Tutorial
+### Gaussian-based Model
+We first see `gridSearchGaussEst(...)`. This function try to fit data in 
+\((-\infty, \infty)\) with Gaussian Distribution and polynomials. 
+Let’s see the actual codes here. We try to fit data `mix2Gauss200`, a part of
+package component which contains 200 samples of bimodal mixed Gaussian
+distributions. To estimate, we first create parameter candidates as follows.
+
+```
+dlst <- c(2, 4)
+mulst <- c(-0.4, -0.2, 0, 0.2, 0.4)
+siglst <- c(0.6, 0.8, 1.0, 1.2, 1.4)
+```
+
+`dlst` is a list of degree of polynomials, which should be even and range 
+from 2 to 20. So in this example, we try to estimate with polynomials of 
+degree \(2\) and \(4\).
+
+`mulst` is a list of \(\mu\) of a base Gaussian distribution. `siglst` is also 
+a list of \(\sigma\) of a base Gaussian distribution. Note that these `mulst` 
+and `siglst` are applied internally standardized data, not original data. 
+So we do not have to care about the mean and standard deviation of original data
+in estimation.
+
+Now we call an estimator function with an above configuration:
+```
+model1 <- gridSearchGaussEst(mix2Gauss200, dlst, mulst, siglst)
+```
+`gridSearchGaussEst` internally standardizes `mix2Gauss200` and call 
+`solveGaussEst` to compute a coefficients of polynomials for each parameter
+candidate of Gaussian distribution, and sort the results by Akaike Information
+Criterion(AIC).
+
+If you are using RStudio, then you can inspect the result easily. Just right 
+click model1 entry in the Environment tab, then you can see the table like this:
+
+
+# Theoretical Backgrounds
+## Problem Formulations
+
+The aim of this package is to estimate an unknown univariate density \(g(x)\) over the support of \(S \subset \mathbb{R}\) from an \(n\) data set \(\{x_1, \ldots,x_n \}\), realizations of random variable whose density is \(g(x)\), by adopting the model:
+
+\[ f(x; \alpha, \beta) := p(x; \alpha) \cdot K(x; \beta),\]
+
+where \(p(x; \alpha)\) is a univariate polynomial with coefficients \(\alpha\) and \(K(x; \beta)\) is a density function over a support \(S\). A polynomial \(p(x; \alpha)\) is nonnegative over \(S\), and a base function \(K(x; \beta)\) is an instance of an exponential family of distributions, specifically, Gaussian distribution \(K(x;\mu, \sigma) = \frac{1}{\sqrt{2\pi} \sigma} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)\) when \(S = (-\infty, \infty)\) or an exponential distribution \(K(x;\lambda) = \lambda e^{-\lambda x}\) when \(S = (0, \infty)\).
+
+A basic approach for this type of a problem is a maximum likelihood method (MLE); choose good parameters which maximize the product of the probabilities of realizations (likelihood): \[ \max_{\alpha, \beta} \prod_{i=1}^{n} f(x_i; \alpha, \beta). \] In computation, it is customary to take a \(-\log\) of a likelihood, which flips the sign of the objective and change a maximization problem to a minimization problem. Also we need to guarantee that \(f\) is a probability density, i.e., \[ \int_{S} p(x; \alpha) \cdot K(x; \beta) \mathrm{d}x = 1. \] Hence, the skeleton of the estimation problem becomes: \[ \min_{\alpha, \beta} -\sum_{i=1}^{n} \left[\log p(x_i; \alpha) + \log K(x_i; \beta)\right]\\ \text{s.t.}\quad \int_{S} p(x; \alpha) \cdot K(x; \beta) \mathrm{d}x = 1,\\ \quad p(x;\alpha) \ge 0, \quad x \in S. \] Since it is difficult to find best \(\alpha\) and \(\beta\) simultaneously, we solve this problem in two-stage processes; we first solve the problem in regard to \(\alpha\) for fixed \(\beta\), and then choose good \(\beta\) among the candidates.
+
+We first discuss the 1st stage of the problem. It is a known fact that the last constraint in the above problem is expressed by \[ p(x; \alpha) = \mathbb{x}_{d}^T Q \mathbb{x}_{d} \ge 0, \quad \text{in case } S = (-\infty, \infty), \] for some symmetric matrix \(Q \succeq 0\), whose notation denotes that \(Q\) is semidefinte, and a (d+1)-dimensional column vector \(\mathbb{x}_{d} = (1, x,\ldots, x^d)^T\), and \[ p(x; \alpha) = \mathbb{x}_{d}^T Q \mathbb{x}_{d} + x \cdot \mathbb{x}_{d-1}^T Q_2 \mathbb{x}_{d-1} \ge 0, \quad \text{in case } S = [0, \infty), \] for some symmetric matrices \(Q_1, Q_2 \succeq 0\) and (d+1)- and d-dimensional column vectors \(\mathbb{x}_{d} = (1, x,\ldots, x^d)^T\) and \(\mathbb{x}_{d-1} = (1, x,\ldots, x^{d-1})^T\).
+
+Thus, with the notations \(X_d := \mathbb{x}_{d} \mathbb{x}_{d}^T\) and \(X_{d-1} :=\mathbb{x}_{d-1} \mathbb{x}_{d-1}^T\), probability density constraints are respectively written down to: \[ \mathrm{trace}\left(Q M\right) = 1, \quad \text{where } M := \int_{-\infty}^{\infty} X_{d} K(x; \mu, \sigma) \mathrm{d}x, \] for a normal distribution (\(S = (-\infty, \infty)\)), and \[ \mathrm{trace}\left(Q_1 M_1\right) + \mathrm{trace}\left(Q_2 M_2 \right)= 1,\\ \text{where } M_1 := \int_{0}^{\infty} X_{d} K(x; \lambda) \mathrm{d}x, \quad M_2 := \int_{0}^{\infty} x \cdot X_{d-1} K(x; \lambda) \mathrm{d}x, \] for an exponential distribution (\(S = [0, \infty)\)). Note that \(X_d\) and \(X_{d-1}\) are symmetric matrices and \(M\) is a moment matrix whose (i, j)-th element is an (i+j-2)-th degree of the moment of a normal distribution, and similarly, an (i, j)-th element of \(M_1\) and \(M_2\) is an (i+j-2)-th and (i+j-1)-th degree of the moment of an exponential distribution, respectively.
+
+Now, from above discussions, our estimations are formulated in semidefinite programming problems (SDP) for fixed \(\beta\) as follows:
+
+\[ \min_{y_i, Q} -\sum_{i=1}^{n} \left[ \log y_i + \log K(x_i; \mu, \sigma)\right]\\ \text{s.t.}\quad y_i =\mathrm{trace}(X^{(i)} Q),\\ \quad y_i \ge 0, \quad (i=1,\ldots,n),\\ \quad \mathrm{trace}(M Q) = 1,\\ \quad Q \succeq 0, \] for a normal distribution \(K(x;\mu, \sigma)\) and \[ \min_{y_i, Q_1,Q_2} -\sum_{i=1}^{n} \left[ \log y_i +\log K(x_i; \lambda)\right]\\ \text{s.t.} \quad y_i = \mathrm{trace}(X_{d}^{(i)} Q_1) + \mathrm{trace}(X_{d-1}^{(i)} Q_2)),\\ \quad y_i \ge 0, \quad (i=1,\ldots,n),\\ \quad \mathrm{trace}(M_1 Q_1) + \mathrm{trace}(M_2 Q_2) = 1,\\ \quad Q_1 \succeq 0,\\ \quad Q_2 \succeq 0, \] for an exponential distribution \(K(x;\lambda)\).
+
+Among several algorithms to solve SDP, we adopt an infeasible primal-dual interior-point algorithm and implement it so as to exploit a problem structure.
+
+In this package, `gridSearch(data,...)`
+

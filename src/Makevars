@@ -1,0 +1,9 @@
+PKG_LIBS += $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
+
+C_SOURCES = $(wildcard *.c)
+FORTRAN_SOURCES = $(wildcard slatec/*.f)
+
+OBJECTS = $(C_SOURCES:.c=.o) $(FORTRAN_SOURCES:.f=.o)
+#TT:
+#	echo $(LAPACK_LIBS);
+#	echo $(BLAS_LIBS);

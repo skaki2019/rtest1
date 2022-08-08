@@ -1,0 +1,16 @@
+---
+title: "rtest1a"
+output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{rtest1a}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Problem Formulations
+
+The aim of this package is to estimate an unknown univariate density \(g(x)\) over the support of \(S \subset \mathbb{R}\) from an \(n\) data set \(\{x_1, \ldots,x_n \}\), realizations of random variable whose density is \(g(x)\), by adopting the model:
+
+\[ f(x; \alpha, \beta) := p(x; \alpha) \cdot K(x; \beta),\]
+
+where \(p(x; \alpha)\) is a univariate polynomial with coefficients \(\alpha\) and \(K(x; \beta)\) is a density function over a support \(S\). A polynomial \(p(x; \alpha)\) is nonnegative over \(S\), and a base function \(K(x; \beta)\) is an instance of an exponential family of distributions, specifically, Gaussian distribution \(K(x;\mu, \sigma) = \frac{1}{\sqrt{2\pi} \sigma} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)\) when \(S = (-\infty, \infty)\) or an exponential distribution \(K(x;\lambda) = \lambda e^{-\lambda x}\) when \(S = (0, \infty)\).
