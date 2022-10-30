@@ -884,5 +884,5 @@ C
 C
 C     CALL FDUMP
 C
-      STOP
+!      STOP
       END
