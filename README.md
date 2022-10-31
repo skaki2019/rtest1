@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/skaki2019/rtest1/workflows/R-CMD-check/badge.svg)](https://github.com/skaki2019/rtest1/actions?workflow=R-CMD-check)
+[![R-CMD-check](https://github.com/skaki2019/rtest1/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/skaki2019/rtest1/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This is an example of r package using c and fortran code. Use this for a
