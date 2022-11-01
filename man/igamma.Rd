@@ -15,5 +15,9 @@ igamma(a, x)
 \code{dgami(a, x)}
 }
 \description{
-Compute incomplete gamma
+Evaluate an incomplete gamma function:
+\deqn{\gamma(a, x) = \int_{0}^{x} t^{a-1}\exp{-t}dt,}
+using SLATEC \code{dgami} in \url{https://netlib.org/slatec/}.
+When \eqn{a \gt 0} and \eqn{x \ge 0}, compute the result, otherwise the value
+is \code{NaN}.
 }

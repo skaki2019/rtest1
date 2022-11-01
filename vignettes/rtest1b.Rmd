@@ -1,14 +1,11 @@
 ---
-title: "rtest1a"
+title: "rtest1b"
 date: October 31st, 2022
 output:
-  pdf_document:
-    toc: false
+  html_document:
     number_sections: true
-    citation_package: biblatex
-    keep_tex: true
 vignette: >
-  %\VignetteIndexEntry{rtest1a}
+  %\VignetteIndexEntry{rtest1b}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---

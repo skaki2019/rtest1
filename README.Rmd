@@ -17,6 +17,8 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/skaki2019/rtest1/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/skaki2019/rtest1/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+![GitHub](https://img.shields.io/github/license/skaki2019/rtest1)
 <!-- badges: end -->
 
 This is an example of r package using c and fortran code.

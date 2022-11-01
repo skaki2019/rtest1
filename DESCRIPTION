@@ -13,3 +13,4 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://skaki2019.github.io/rtest1/

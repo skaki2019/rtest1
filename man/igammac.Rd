@@ -15,5 +15,9 @@ igammac(a, x)
 \code{dgamic(a, x)}
 }
 \description{
-Compute complementary incomplete gamma
+Evaluate an complementary incomplete gamma function:
+\deqn{\gamma^{*}(a, x) = \int_{x}^{\inf} t^{a-1}\exp{-t}dt,}
+using SLATEC \code{dgamic} in \url{https://netlib.org/slatec/}.
+When \eqn{x > 0} or \eqn{x \eq 0 & a \ge 0}, compute the result,
+otherwise the value is \code{NaN}.
 }
