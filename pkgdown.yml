@@ -1,0 +1,11 @@
+pandoc: 2.19.2
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  rtest1a: rtest1a.html
+  rtest1b: rtest1b.html
+last_built: 2022-11-01T13:22Z
+urls:
+  reference: https://skaki2019.github.io/rtest1/reference
+  article: https://skaki2019.github.io/rtest1/articles
+
